@@ -1,45 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>오늘 점심 맛집 추천</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: var(--font-sans); }
-.wrap { padding: 1.5rem 0; }
-.section-label { font-size: 12px; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; font-weight: 500; }
-.badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: var(--border-radius-md); font-weight: 500; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1a1a1a; background: #f9f9f8; padding: 1.5rem; }
+.wrap { max-width: 640px; margin: 0 auto; padding: 1.5rem 0; }
+.section-label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; font-weight: 500; }
+.badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 500; }
 .badge-ok { background: #EAF3DE; color: #27500A; }
 .badge-warn { background: #FAEEDA; color: #633806; }
 .badge-best { background: #185FA5; color: #E6F1FB; }
 .tab-row { display: flex; gap: 8px; margin-bottom: 1.25rem; flex-wrap: wrap; }
-.tab-btn { font-size: 13px; padding: 6px 14px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; cursor: pointer; color: var(--color-text-secondary); transition: background 0.15s; }
-.tab-btn.active { background: var(--color-background-secondary); color: var(--color-text-primary); border-color: var(--color-border-primary); font-weight: 500; }
-.tab-btn:hover:not(.active) { background: var(--color-background-secondary); }
-.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 1rem; }
-.card.top1 { border: 2px solid var(--color-border-info); }
+.tab-btn { font-size: 13px; padding: 6px 14px; border-radius: 8px; border: 1px solid #ddd; background: transparent; cursor: pointer; color: #666; transition: background 0.15s; }
+.tab-btn.active { background: #f0f0ee; color: #1a1a1a; border-color: #bbb; font-weight: 500; }
+.tab-btn:hover:not(.active) { background: #f5f5f5; }
+.card { background: #fff; border: 1px solid #e8e8e6; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+.card.top1 { border: 2px solid #185FA5; }
 .card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 .rank { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; }
 .rank-1 { background: #B5D4F4; color: #042C53; }
 .rank-2 { background: #D3D1C7; color: #2C2C2A; }
 .rank-3 { background: #FAC775; color: #412402; }
-.card-title { font-size: 16px; font-weight: 500; color: var(--color-text-primary); }
-.card-sub { font-size: 13px; color: var(--color-text-secondary); }
-.meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 10px; }
-.meta-item { display: flex; align-items: center; gap: 5px; font-size: 13px; color: var(--color-text-secondary); }
-.section-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; margin-top: 10px; }
+.card-title { font-size: 16px; font-weight: 600; color: #1a1a1a; }
+.card-sub { font-size: 13px; color: #888; }
+.meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 10px; font-size: 13px; color: #666; }
+.section-title { font-size: 14px; font-weight: 500; color: #1a1a1a; margin-bottom: 6px; margin-top: 10px; }
 .pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
-.pill { font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 0.5px solid var(--color-border-secondary); color: var(--color-text-secondary); }
+.pill { font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid #e0e0e0; color: #555; }
 .pill.green { background: #EAF3DE; color: #27500A; border-color: #C0DD97; }
 .pill.amber { background: #FAEEDA; color: #633806; border-color: #FAC775; }
-.divider { border: none; border-top: 0.5px solid var(--color-border-tertiary); margin: 10px 0; }
-.excluded-card { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem; margin-bottom: 8px; }
-.excluded-name { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 3px; }
-.excluded-reason { font-size: 13px; color: var(--color-text-secondary); }
-.script-box { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem; font-size: 13px; color: var(--color-text-primary); line-height: 1.7; white-space: pre-wrap; border: 0.5px solid var(--color-border-tertiary); }
-.notice-box { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem; font-size: 13px; color: var(--color-text-primary); line-height: 1.8; border: 0.5px solid var(--color-border-tertiary); }
+.divider { border: none; border-top: 1px solid #f0f0ee; margin: 10px 0; }
+.excluded-card { background: #f9f9f8; border: 1px solid #e8e8e6; border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 8px; }
+.excluded-name { font-size: 14px; font-weight: 500; color: #1a1a1a; margin-bottom: 3px; }
+.excluded-reason { font-size: 13px; color: #666; }
+.script-box { background: #f9f9f8; border-radius: 8px; padding: 1rem; font-size: 13px; color: #1a1a1a; line-height: 1.7; white-space: pre-wrap; border: 1px solid #e8e8e6; }
+.notice-box { background: #f9f9f8; border-radius: 8px; padding: 1rem; font-size: 13px; color: #1a1a1a; line-height: 1.8; border: 1px solid #e8e8e6; }
 .person-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; margin-top: 8px; }
-.person-chip { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 6px 8px; font-size: 12px; }
-.person-name { font-weight: 500; color: var(--color-text-primary); margin-bottom: 2px; }
-.person-note { color: var(--color-text-tertiary); font-size: 11px; }
+.person-chip { background: #f9f9f8; border-radius: 8px; padding: 6px 8px; font-size: 12px; }
+.person-name { font-weight: 500; color: #1a1a1a; margin-bottom: 2px; }
+.person-note { color: #aaa; font-size: 11px; }
+.hint { font-size: 12px; color: #aaa; margin-top: 8px; }
 </style>
-
+</head>
+<body>
 <div class="wrap">
+
   <div class="tab-row">
     <button class="tab-btn active" onclick="showTab('top3')">⭐ 추천 TOP 3</button>
     <button class="tab-btn" onclick="showTab('excluded')">✕ 제외 후보</button>
@@ -60,11 +68,11 @@ body { font-family: var(--font-sans); }
         </div>
       </div>
       <div class="meta-row">
-        <span class="meta-item">🚶 도보 약 8분</span>
-        <span class="meta-item">💰 11,000~15,000원</span>
-        <span class="meta-item">⭐ 4.8 (196개 리뷰)</span>
-        <span class="meta-item">🕙 10:00~20:15 (월 휴무)</span>
-        <span class="meta-item">📞 031-414-0512</span>
+        <span>🚶 도보 약 8분</span>
+        <span>💰 11,000~15,000원</span>
+        <span>⭐ 4.8 (196개 리뷰)</span>
+        <span>🕙 10:00~20:15 (월 휴무)</span>
+        <span>📞 031-414-0512</span>
       </div>
       <hr class="divider">
       <p class="section-title">선택 근거</p>
@@ -88,11 +96,11 @@ body { font-family: var(--font-sans); }
         </div>
       </div>
       <div class="meta-row">
-        <span class="meta-item">🚶 도보 약 10분</span>
-        <span class="meta-item">💰 9,000~15,000원</span>
-        <span class="meta-item">⭐ 4.5 (364개 리뷰)</span>
-        <span class="meta-item">🕖 07:00~21:00</span>
-        <span class="meta-item">📞 031-414-8882</span>
+        <span>🚶 도보 약 10분</span>
+        <span>💰 9,000~15,000원</span>
+        <span>⭐ 4.5 (364개 리뷰)</span>
+        <span>🕖 07:00~21:00</span>
+        <span>📞 031-414-8882</span>
       </div>
       <hr class="divider">
       <p class="section-title">선택 근거</p>
@@ -110,16 +118,16 @@ body { font-family: var(--font-sans); }
       <div class="card-header">
         <div class="rank rank-3">3</div>
         <div>
-          <div class="card-title">정원옥 (Jeong-Won-Og)</div>
+          <div class="card-title">정원옥</div>
           <div class="card-sub">한식 · 평양냉면 / 비빔냉면 / 곰탕</div>
         </div>
       </div>
       <div class="meta-row">
-        <span class="meta-item">🚶 도보 약 8분</span>
-        <span class="meta-item">💰 11,000~15,000원</span>
-        <span class="meta-item">⭐ 5.0 (10개 리뷰)</span>
-        <span class="meta-item">🕙 11:00~21:00 (일 휴무)</span>
-        <span class="meta-item">📞 031-502-5010</span>
+        <span>🚶 도보 약 8분</span>
+        <span>💰 11,000~15,000원</span>
+        <span>⭐ 5.0 (10개 리뷰)</span>
+        <span>🕙 11:00~21:00 (일 휴무)</span>
+        <span>📞 031-502-5010</span>
       </div>
       <hr class="divider">
       <p class="section-title">선택 근거</p>
@@ -166,8 +174,8 @@ body { font-family: var(--font-sans); }
 혹시 예약이 어려우시면 가장 빠른 가능 시간 알려주시겠어요?
 
 감사합니다.</div>
-    <p style="font-size:12px; color: var(--color-text-tertiary); margin-top: 8px;">ℹ️ 전화 후 세금계산서 필요 여부를 사전에 확인하세요 (사업자번호 지참)</p>
-    <p style="font-size:12px; color: var(--color-text-tertiary); margin-top: 4px;">⚠️ 월요일 휴무이므로 방문 요일 반드시 확인</p>
+    <p class="hint">ℹ️ 전화 후 세금계산서 필요 여부를 사전에 확인하세요 (사업자번호 지참)</p>
+    <p class="hint">⚠️ 월요일 휴무이므로 방문 요일 반드시 확인</p>
   </div>
 
   <div id="tab-notice" style="display:none">
@@ -184,7 +192,7 @@ body { font-family: var(--font-sans); }
 
 ※ 메뉴 선택 시 개인 알러지 유의하시기 바랍니다.
 문의사항 있으시면 말씀해 주세요 😊</div>
-    <p style="font-size:12px; color: var(--color-text-tertiary); margin-top: 8px;">⚠️ 해산물 알러지 있으신 분 → 짜장면 또는 탕수육 선택 권장</p>
+    <p class="hint">⚠️ 해산물 알러지 있으신 분 → 짜장면 또는 탕수육 선택 권장</p>
   </div>
 
   <div id="tab-people" style="display:none">
@@ -203,10 +211,10 @@ body { font-family: var(--font-sans); }
       <div class="person-chip"><div class="person-name">남PM <span class="badge badge-ok">✓</span></div><div class="person-note">12:50 귀환 가능</div></div>
       <div class="person-chip"><div class="person-name">문대표 <span class="badge badge-ok">✓</span></div><div class="person-note">안산 대표 맛집</div></div>
     </div>
-    <p style="font-size:12px; color: var(--color-text-tertiary); margin-top: 12px;">송사원 채식 지향 → 야채짜장 또는 채소 위주 메뉴 요청 가능.</p>
+    <p class="hint" style="margin-top:12px;">송사원 채식 지향 → 야채짜장 또는 채소 위주 메뉴 요청 가능.</p>
   </div>
-</div>
 
+</div>
 <script>
 function showTab(name) {
   ['top3','excluded','script','notice','people'].forEach(t => {
@@ -217,3 +225,5 @@ function showTab(name) {
   });
 }
 </script>
+</body>
+</html>
