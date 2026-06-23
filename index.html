@@ -22,7 +22,6 @@ body { font-family: var(--font-sans); }
 .card-sub { font-size: 13px; color: var(--color-text-secondary); }
 .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 10px; }
 .meta-item { display: flex; align-items: center; gap: 5px; font-size: 13px; color: var(--color-text-secondary); }
-.meta-item i { font-size: 15px; }
 .section-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; margin-top: 10px; }
 .pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
 .pill { font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 0.5px solid var(--color-border-secondary); color: var(--color-text-secondary); }
@@ -38,12 +37,24 @@ body { font-family: var(--font-sans); }
 .person-chip { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 6px 8px; font-size: 12px; }
 .person-name { font-weight: 500; color: var(--color-text-primary); margin-bottom: 2px; }
 .person-note { color: var(--color-text-tertiary); font-size: 11px; }
-.highlight { display: inline-block; background: #FAEEDA; color: #633806; padding: 1px 6px; border-radius: 4px; font-size: 12px; margin-left: 4px; }
-.stars { color: #f59e0b; font-size: 12px; }
+
+/* 설문 결과 배너 */
+.survey-banner { background: #E1F5EE; border: 1px solid #1D9E75; border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
+.survey-banner-title { font-size: 14px; font-weight: 500; color: #0F6E56; margin-bottom: 6px; }
+.survey-banner-body { font-size: 13px; color: #1D6B50; line-height: 1.6; }
+.survey-tag { display: inline-block; font-size: 11px; padding: 2px 7px; border-radius: 10px; background: #fff; color: #0F6E56; border: 1px solid #1D9E75; margin: 2px; }
+.survey-tag.warn { background: #FAECE7; color: #993C1D; border-color: #e87c5a; }
+.btn-back-survey { font-size: 12px; color: #0F6E56; background: none; border: 1px solid #1D9E75; border-radius: 6px; padding: 4px 10px; cursor: pointer; margin-top: 8px; }
+.btn-back-survey:hover { background: #fff; }
 </style>
 
 <div class="wrap">
-  <h2 class="sr-only" style="position:absolute;left:-9999px">오늘 점심 식당 추천 결과</h2>
+  <!-- 설문 결과 배너 (설문에서 넘어온 경우 표시) -->
+  <div id="survey-banner" class="survey-banner" style="display:none;">
+    <div class="survey-banner-title">📋 설문 결과 기반 추천</div>
+    <div class="survey-banner-body" id="survey-banner-body"></div>
+    <button class="btn-back-survey" onclick="location.href='food_survey.html'">← 설문 페이지로 돌아가기</button>
+  </div>
 
   <div class="tab-row">
     <button class="tab-btn active" onclick="showTab('top3')">⭐ 추천 TOP 3</button>
@@ -54,9 +65,8 @@ body { font-family: var(--font-sans); }
   </div>
 
   <div id="tab-top3">
-    <p class="section-label">조건 요약 — 12명 · 예산 14,000원(최대 16,000원) · 도보 10분 이내 · 계산서 필요 · 12:55 귀환 · 경기도 안산시 상록구 장하동 351-1 근처</p>
+    <p class="section-label" id="condition-label">조건 요약 — 12명 · 예산 14,000원(최대 16,000원) · 도보 10분 이내 · 계산서 필요 · 12:55 귀환 · 경기도 안산시 상록구 장하동 351-1 근처</p>
 
-    <!-- 1위 -->
     <div class="card top1">
       <div class="card-header">
         <div class="rank rank-1">1</div>
@@ -85,7 +95,6 @@ body { font-family: var(--font-sans); }
       </div>
     </div>
 
-    <!-- 2위 -->
     <div class="card">
       <div class="card-header">
         <div class="rank rank-2">2</div>
@@ -113,7 +122,6 @@ body { font-family: var(--font-sans); }
       </div>
     </div>
 
-    <!-- 3위 -->
     <div class="card">
       <div class="card-header">
         <div class="rank rank-3">3</div>
@@ -196,8 +204,8 @@ body { font-family: var(--font-sans); }
   </div>
 
   <div id="tab-people" style="display:none">
-    <p class="section-label">참석자별 강릉원조교동짬뽕 적합도</p>
-    <div class="person-grid">
+    <p class="section-label" id="people-label">참석자별 강릉원조교동짬뽕 적합도</p>
+    <div class="person-grid" id="people-grid">
       <div class="person-chip"><div class="person-name">김대리 <span class="badge badge-ok">✓</span></div><div class="person-note">국물 짬뽕 추천</div></div>
       <div class="person-chip"><div class="person-name">이책임 <span class="badge badge-ok">✓</span></div><div class="person-note">빠른 식사 가능</div></div>
       <div class="person-chip"><div class="person-name">박선임 <span class="badge badge-warn">주의</span></div><div class="person-note">해산물 알러지 확인</div></div>
@@ -211,7 +219,7 @@ body { font-family: var(--font-sans); }
       <div class="person-chip"><div class="person-name">남PM <span class="badge badge-ok">✓</span></div><div class="person-note">12:50 귀환 가능</div></div>
       <div class="person-chip"><div class="person-name">문대표 <span class="badge badge-ok">✓</span></div><div class="person-note">안산 대표 맛집</div></div>
     </div>
-    <p style="font-size:12px; color: var(--color-text-tertiary); margin-top: 12px;">송사원 채식 지향 → 야채짜장 또는 채소 위주 메뉴 요청 가능. 완전 채식은 어려울 수 있음.</p>
+    <p style="font-size:12px; color: var(--color-text-tertiary); margin-top: 12px;">송사원 채식 지향 → 야채짜장 또는 채소 위주 메뉴 요청 가능.</p>
   </div>
 </div>
 
@@ -224,4 +232,46 @@ function showTab(name) {
     b.classList.toggle('active', ['top3','excluded','script','notice','people'][i] === name);
   });
 }
+
+// 설문 결과 가져와서 배너 표시
+(function() {
+  try {
+    const raw = sessionStorage.getItem('survey_responses');
+    if (!raw) return;
+    const responses = JSON.parse(raw);
+    if (!responses || !responses.length) return;
+
+    const names = responses.map(r => r.name);
+    const allPrefs = responses.flatMap(r => r.prefs);
+    const prefCount = {};
+    allPrefs.forEach(p => { prefCount[p] = (prefCount[p]||0)+1; });
+    const topPrefs = Object.entries(prefCount).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([k])=>k);
+    const allergies = responses.filter(r => r.allergies.some(a => a !== '없음')).map(r => r.name + '(' + r.allergies.filter(a=>a!=='없음').join(',') + ')');
+
+    const banner = document.getElementById('survey-banner');
+    const body = document.getElementById('survey-banner-body');
+    banner.style.display = 'block';
+
+    let html = `<strong>${responses.length}명</strong> 설문 참여 · 선호: `;
+    html += topPrefs.map(p => `<span class="survey-tag">${p}</span>`).join('');
+    if (allergies.length) {
+      html += `<br>⚠️ 알러지 주의: ` + allergies.map(a => `<span class="survey-tag warn">${a}</span>`).join('');
+    }
+    body.innerHTML = html;
+
+    // 참석자 탭도 설문 응답자로 업데이트
+    const grid = document.getElementById('people-grid');
+    if (grid && responses.length) {
+      const label = document.getElementById('people-label');
+      if (label) label.textContent = '설문 참여자별 강릉원조교동짬뽕 적합도';
+      grid.innerHTML = responses.map(r => {
+        const hasAllergy = r.allergies.some(a => a !== '없음');
+        const isVeg = r.restricts.includes('채식주의 (Vegetarian)') || r.restricts.includes('완전채식 (Vegan)') || r.prefs.includes('채식/비건');
+        const badge = hasAllergy || isVeg ? `<span class="badge badge-warn">주의</span>` : `<span class="badge badge-ok">✓</span>`;
+        const note = hasAllergy ? '알러지: ' + r.allergies.filter(a=>a!=='없음').join(', ') : isVeg ? '채식 옵션 확인' : r.prefs.slice(0,2).join(', ') || '무관';
+        return `<div class="person-chip"><div class="person-name">${r.name} ${badge}</div><div class="person-note">${note}</div></div>`;
+      }).join('');
+    }
+  } catch(e) {}
+})();
 </script>
